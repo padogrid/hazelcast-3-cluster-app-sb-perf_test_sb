@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+BASE_DIR="$(dirname "$SCRIPT_DIR")"
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+WORKSPACE
+   $HAZELCAST_ADDON_WORKSPACE
+
+NAME
+   $EXECUTABLE - Merge the split clusters by resetting iptables
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESRIPTION
+   Merges the split clusters by resetting iptables.
+
+SEE ALSO
+   split_cluster, merge_cluster
+
+EOF
+exit
+fi
+
+VM_HOSTS=`getClusterProperty "vm.hosts"`
+# Replace , with space
+VM_HOSTS=$(echo "$VM_HOSTS" | sed "s/,/ /g")
+
+for i in $VM_HOSTS; do
+   ssh -q -n $i "sudo iptables -F INPUT"
+done

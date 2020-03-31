@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+BASE_DIR="$(dirname "$SCRIPT_DIR")"
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+WORKSPACE
+   $HAZELCAST_ADDON_WORKSPACE
+
+NAME
+   $EXECUTABLE - List all rules in iptables for all VM hosts (nodes) in the cluster $CLUSTER.
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESRIPTION
+   Lists all rules in iptables for all VM hosts (nodes) in the cluster $CLUSTER.
+
+EOF
+exit
+fi
+
+VM_HOSTS=`getClusterProperty "vm.hosts"`
+# Replace , with space
+VM_HOSTS=$(echo "$VM_HOSTS" | sed "s/,/ /g")
+
+echo ""
+for i in $VM_HOSTS; do
+   echo $i
+   echo "-------------"
+   ssh -q -n $i "sudo iptables -L"
+echo ""
+done

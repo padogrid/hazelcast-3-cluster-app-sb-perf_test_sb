@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+BASE_DIR="$(dirname "$SCRIPT_DIR")"
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+WORKSPACE
+   $HAZELCAST_ADDON_WORKSPACE
+
+NAME
+   $EXECUTABLE - Split the cluster $CLUSTER into two (2)
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESRIPTION
+   Splits the cluster $CLUSTER into two (2) by applying iptables rules.
+
+SEE ALSO
+   merge_cluster, list_rules
+
+EOF
+exit
+fi
+
+ssh -q -n node-01.local "\
+sudo iptables -A INPUT -i eth1 -s node-03.local -j DROP; \
+sudo iptables -A INPUT -i eth1 -s node-04.local -j DROP; \
+sudo iptables -A INPUT -i eth1 -s node-05.local -j DROP"
+
+ssh -q -n node-02.local "\
+sudo iptables -A INPUT -i eth1 -s node-03.local -j DROP; \
+sudo iptables -A INPUT -i eth1 -s node-04.local -j DROP; \
+sudo iptables -A INPUT -i eth1 -s node-05.local -j DROP"
+
+cat <<EOF
+
+Cluster split complete. The cluster $CLUSTER has been split into two (2) as follows:
+
+| Cluster | Nodes                                       |
+| ------- | ------------------------------------------- |
+| A       | node-01.local, node-02.local                |
+| B       | node-03.local, node-04.local, node-05.local |
+
+To merge the split clusters, run the 'merge_cluster' command.
+
+EOF
