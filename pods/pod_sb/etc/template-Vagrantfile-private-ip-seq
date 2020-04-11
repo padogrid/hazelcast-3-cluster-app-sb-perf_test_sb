@@ -44,8 +44,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, inline: "echo 'source /vagrant/bootstrap.sh' > /etc/profile.d/sa-environment.sh", :run => 'always'
 
   # sync folders: <host-dir> to <guest-dir>
-  config.vm.synced_folder "${HAZELCAST_ADDON_WORKSPACES_HOME}", "/home/vagrant/${HAZELCAST_ADDON_WORKSPACES_HOME_NAME}"
-  config.vm.synced_folder "${HAZELCAST_ADDON_HOME}", "/home/vagrant/${HAZELCAST_ADDON_DIR_NAME}"
+  config.vm.synced_folder "${PADOGRID_WORKSPACES_HOME}", "/home/vagrant/${PADOGRID_WORKSPACES_HOME_NAME}"
+  config.vm.synced_folder "${PADOGRID_HOME}", "/home/vagrant/${PADOGRID_DIR_NAME}"
   config.vm.synced_folder "${HOST_PRODUCTS_DIR}", "/home/vagrant/products"
 
   # Provision required software.

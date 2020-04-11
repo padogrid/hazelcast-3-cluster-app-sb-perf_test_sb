@@ -5,7 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.hazelcast.addon</groupId>
+	<groupId>padogrid.addon</groupId>
 	<artifactId>hazelcast-3-cluster-pod-app-sb-pod_sb-perf_test_sb</artifactId>
 	<packaging>pom</packaging>
 	<name>hazelcast-3-cluster-pod-app-sb-pod_sb-perf_test_sb</name>

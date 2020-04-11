@@ -14,7 +14,7 @@ SYNOPSIS
    Builds the perf_test 'factory' environment for the workspace. It downloads
    the dependencies and places them in the following workspace lib directory.
 
-   $HAZELCAST_ADDON_WORKSPACE/lib
+   $PADOGRID_WORKSPACE/lib
 
 OPTIONS
    -clean
@@ -30,7 +30,7 @@ pushd $APP_DIR > /dev/null
 mvn install
 popd > /dev/null
 
-cp $APP_DIR/lib/* $HAZELCAST_ADDON_WORKSPACE/lib/
+cp $APP_DIR/lib/* $PADOGRID_WORKSPACE/lib/
 
 # Remove the build files if the -clean option is specified.
 if [ "$CLEAN" == "true" ]; then
@@ -42,11 +42,11 @@ fi
 #
 cat <<EOF
 
-Workspace: $HAZELCAST_ADDON_WORKSPACE
+Workspace: $PADOGRID_WORKSPACE
 
 Downloaded the required library files into the following directory.
 
-   $HAZELCAST_ADDON_WORKSPACE/lib
+   $PADOGRID_WORKSPACE/lib
 
 CLASSPATH includes the above directory for all apps and clusters running under
 this workspace. The downloaded files allow you to run the following add-on(s):

@@ -10,7 +10,7 @@ if [ "$HELP" == "true" ]; then
 cat <<EOF
 
 WORKSPACE
-   $HAZELCAST_ADDON_WORKSPACE
+   $PADOGRID_WORKSPACE
 
 NAME
    $EXECUTABLE - Merge the split clusters by resetting iptables

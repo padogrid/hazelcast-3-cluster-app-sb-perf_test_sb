@@ -4,11 +4,11 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.hazelcast.addon</groupId>
-	<version>0.2.4-SNAPSHOT</version>
-	<artifactId>hazelcast-addon-perf_test</artifactId>
+	<groupId>padogrid.addon</groupId>
+	<version>1.0.0</version>
+	<artifactId>hazelcast-addon-perf_test_sb</artifactId>
 	<packaging>pom</packaging>
-	<name>hazelcast-addon-perf_test</name>
+	<name>hazelcast-addon-perf_test_sb</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

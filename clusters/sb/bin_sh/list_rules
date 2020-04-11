@@ -10,7 +10,7 @@ if [ "$HELP" == "true" ]; then
 cat <<EOF
 
 WORKSPACE
-   $HAZELCAST_ADDON_WORKSPACE
+   $PADOGRID_WORKSPACE
 
 NAME
    $EXECUTABLE - List all rules in iptables for all VM hosts (nodes) in the cluster $CLUSTER.

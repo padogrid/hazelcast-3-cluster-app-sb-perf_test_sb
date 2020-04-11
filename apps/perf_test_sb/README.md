@@ -150,7 +150,7 @@ public class Order implements VersionedPortable, Comparable<Order>
         ...
 ```
 
-To use `MapStorePkDbImpl`, you must first build the environment by executing the `build_app` script as shown below. This script runs Maven to download the dependency files into the `$HAZELCAST_ADDON_WORKSPACE/lib` directory, which is included in `CLASSPATH` for all the apps and clusters running in the workspace.
+To use `MapStorePkDbImpl`, you must first build the environment by executing the `build_app` script as shown below. This script runs Maven to download the dependency files into the `$PADOGRID_WORKSPACE/lib` directory, which is included in `CLASSPATH` for all the apps and clusters running in the workspace.
 
 ```console
 ./build_app
@@ -160,7 +160,7 @@ Upon successful build, you must also configure the cluster in `hazelcast.xml` fi
 
 ```console
 # Edit hazelcast.xml
-vi $HAZELCAST_ADDON_WORKSPACE/clusters/<your-cluster>/etc/hazelcast.xml
+vi $PADOGRID_WORKSPACE/clusters/<your-cluster>/etc/hazelcast.xml
 ```
 
 Add the following in the `hazelcast.xml` file. Make sure to add `org.hazelcast.demo.nw.data.PortableFactoryImpl` for serialization as it is needed by `MapStorePkDbImpl` in the cluster to deserialize the `Portable` objects, `Customer` and `Order`.
@@ -212,8 +212,8 @@ The above configures the `nw/customers` and `nw/orders` maps to store and load d
 
 ```console
 # Edit hibernate.cfg.xml
-vi $HAZELCAST_ADDON_WORKSPACE/clusters/<your-cluster>/etc/hibernate.cfg-mysql.xml
-vi $HAZELCAST_ADDON_WORKSPACE/clusters/<your-cluster>/etc/hibernate.cfg-postresql.xml
+vi $PADOGRID_WORKSPACE/clusters/<your-cluster>/etc/hibernate.cfg-mysql.xml
+vi $PADOGRID_WORKSPACE/clusters/<your-cluster>/etc/hibernate.cfg-postresql.xml
 ```
 
 The following is the `hibernate.cfg-mysql.xml` file provided by `hazelcast-addon`. Make sure to replace the database information with your database information.
@@ -254,7 +254,7 @@ The following is the `hibernate.cfg-mysql.xml` file provided by `hazelcast-addon
 The Hibernate configuration file path must be provided before you start the cluster. Edit the cluster's `setenv.sh` file and include the path as follows:
 
 ```
-vi $HAZELCAST_ADDON_WORKSPACE/clusters/<your-cluster>/bin_sh/setenv.sh
+vi $PADOGRID_WORKSPACE/clusters/<your-cluster>/bin_sh/setenv.sh
 
 # Set JAVA_OPTS in setenv.sh
 JAVA_OPTS="$JAVA_OPTS -Dhazelcast-addon.hibernate.config=$CLUSTER_DIR/etc/hibernate.cfg-mysql.xml"

@@ -10,7 +10,7 @@ if [ "$HELP" == "true" ]; then
 cat <<EOF
 
 WORKSPACE
-   $HAZELCAST_ADDON_WORKSPACE
+   $PADOGRID_WORKSPACE
 
 NAME
    $EXECUTABLE - Split the cluster $CLUSTER into two (2)
