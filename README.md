@@ -38,7 +38,7 @@ We will be building the following components as we setup and run the environment
 3. Build `perf_test_sb`
 4. Build `desktop`
 
-Follow the instructions in the subsequent sections
+Follow the instructions in the subsequent sections.
 
 ### Creating Pod
 
