@@ -18,100 +18,57 @@ To prepare for encountering cluster split-brain situations, this use case provid
 
 This bundle includes the following components.
 
-- Pod **pod-sb**. The pod-sb pod is configured with one (1) primary node and five (5) nodes. Each node has 2 GiB of memory.
+- Cluster **sb**. The sb cluster is configured with five (5) VM members running in the `pod_sb` pod. It includes scripts that use `iptables` to drop TCP packets to split the `sb` cluster into two (2). It is configured with split-brain quorum rules for th following maps.
 
-- Cluster **sb**. The sb cluster is configured with five (5) VM members running in the `pod-sb` pod. It includes scripts that use `iptables` to drop TCP packets to split the `sb` cluster into two (2). It is configured with split-brain quorum rules for th following maps.
-
-  - nw/customers
-  - nw/orders
+  - `nw/customers`
+  - `nw/orders`
 
 - App **perf_test_sb**. The `perf_test_sb` app is configured to run on a split cluster.
 
 - App **desktop**. The `desktop` app is used to compare data in the split clusters and the merged cluster. It is not included in the bundle because the vanilla desktop works without any modifications. You will be installing the `desktop` app as one of the steps shown in the [Creating Split-Brain](#creating-split-brain) section.
 
-*Note that the `sb` cluster is configured to run in the `pod-sb` pod with its members running as VM hosts and not Vagrant pod hosts.*
+*Note that the `sb` cluster is configured to run in the `pod_sb` pod with its members running as VM hosts and not Vagrant pod hosts.*
 
 ## Installation Steps
 
 We will be building the following components as we setup and run the environment.
 
-1. Configure pod
+1. Create pod
 2. Build pod
 3. Build `perf_test_sb`
 4. Build `desktop`
 
-Follow the instructions in the subsequent sections.
+Follow the instructions in the subsequent sections
 
-### Configuring Pod
+### Creating Pod
 
-You must first build the `pod-sb` pod, which has been created with the IP addresses shown below. Make sure you have the host-only private network created for 192.168.56.1. For instructions see 
-
-[Creating VirtualBox Private Network (host-only)](https://github.com/javapark1/hazelcast-addon/tree/master/hazelcast-addon-deployment/src/main/resources/pods#creating-virtualbox-private-network-host-only)
-
-| Name                 | IP/Mask         |
-| -------------------- | --------------- |
-| Host Network Adapter | 192.168.56.1/24 |
-| pnode.local          | 192.168.56.10   |
-| node-01.local        | 192.168.56.11   |
-| node-02.local        | 192.168.56.12   |
-| node-03.local        | 192.168.56.13   |
-| node-04.local        | 192.168.56.14   |
-| node-05.local        | 192.168.56.15   |
-
-The pod-sb has been configured in the `etc/pod.properties` as shown below.
-
-**etc/pod.properties:**
-
-```properties
-# Pod name
-pod.name=pod-sb
-pod.type=vagrant
-pod.box.image=ubuntu/trusty64
-
-# Node (guest) properties.
-node.name.primary=pnode
-node.name.prefix=node
-node.ip.lastOctet=10
-node.memory.primary=2048
-node.memory.data=2048
-node.count=5
-
-# Host properties.
-host.productsDir=/Users/dpark/Work/Hazelcast/workspaces_0.2.4-SNAPSHOT/ws-pods/products
-```
-
-Make sure to change the `host.productsDir` value to reflect your Linux product directory path. You can also change the memory size of the primary and data nodes if you don't have enough memory. If you change the memory size then you may also need to change the member heap size, which is also mentioned in the [Configuring Cluster](#configuring-cluster) section below. 
-
-The products directory must contain Linux version of JDK and Hazelcast Enterprise. For example,
+Create a pod named `pod_sb` with five (5) data nodes. The pod name must be `pod_sb` since the bundle's cluster, `sb`, has been paired with that pod name.
 
 ```console
-products
-├── hazelcast-enterprise-3.12.5
-└── jdk1.8.0_212
+create_pod -pod pod_sb
 ```
 
-To change the pod properties:
+### Building Pod
 
-```console
-cd_pod pod-sb
-vi etc/pod.properties
-```
-
-Once you are satisfied with the `pod-sb` properties, run `build_pod` to build the nodes.
+Build the pod you just created.
  
 ```console
 # Build and start the pod
-build_pod -pod pod-sb
+build_pod -pod pod_sb
 ```
 
 ### Configuring Cluster
 
-If you changed the memory size of the primary and data nodes in the [Configuring Pod](#configuring-pod) section, then you can adjust the Hazelcast member min/max heap size in the `etc/cluster.properties` file as follows:
+If you changed the default memory size of the primary and data nodes when you created the pod, then you can adjust the Hazelcast member min/max heap size in the `etc/cluster.properties` file as follows:
 
 ```console
 switch_cluster sb
 vi etc/cluster.properties
+```
 
+Change the heap min/max sizes in the `etc/cluster.properties` file.
+
+```properties
 # Heap min and max values in etc/cluster.properties
 heap.min=1g
 heap.max=1g
@@ -124,7 +81,7 @@ heap.max=1g
 Login to `pnode.local` and start the `sb` cluster as follows:
 
 ```console
-cd_pod pod-sb
+cd_pod pod_sb
 vagrant ssh
 password: vagrant
 
@@ -134,11 +91,13 @@ start_cluster
 start_mc
 ```
 
-### 2. Monitor the Management Center from your web browser
+### 2. Monitor Management Center
+
+Enter the following URL in your browser to monitor the Hazelcast cluster from the Management Center.
 
 [http://pnode.local:8080/hazelcast-mancenter](http://pnode.local:8080/hazelcast-mancenter)
 
-### 3. Ingest data - perf_test_sb
+### 3. Ingest data - `perf_test_sb`
 
 From your host OS, build `perf_test_sb` and run `test_group` as follows:
 
@@ -148,7 +107,7 @@ cd_app perf_test_sb; cd bin_sh
 ./test_group -prop ../etc/group-factory.properties -run
 ```
 
-### 4. View data - desktop
+### 4. View data - `desktop`
 
 From your host OS, install and run the `desktop` app as follows:
 
@@ -341,7 +300,7 @@ stop_mc -cluster sb
 From your host OS, execute the following:
 
 ```console
-stop_pod -pod pod-sb
+stop_pod -pod pod_sb
 ```
 
 ### Remove Pod
@@ -349,7 +308,7 @@ stop_pod -pod pod-sb
 From you host OS, execute the following:
 
 ```console
-remove_pod -pod pod-sb
+remove_pod -pod pod_sb
 ```
 
 ### Close Desktop
