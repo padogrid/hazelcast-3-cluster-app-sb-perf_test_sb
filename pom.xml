@@ -6,9 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>padogrid.addon</groupId>
-	<artifactId>hazelcast-3-cluster-app-sb-perf_test_sb</artifactId>
+	<artifactId>bundle-hazelcast-3-app-perf_test_sb-cluster-sb</artifactId>
 	<packaging>pom</packaging>
-	<name>hazelcast-3-cluster-app-sb-perf_test_sb</name>
+	<name>${project.artifactId}</name>
 	<version>1.0.0</version>
 	<description>Includes a cluster, and an app for testing cluster split-brain</description>
 

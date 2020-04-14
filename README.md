@@ -5,7 +5,7 @@ This bundle provides scripts, configuration files, and apps for creating a netwo
 ## Installing Bundle
 
 ```console
-install_bundle -download hazelcast-3-cluster-pod-app-sb-pod_sb-perf_test_sb
+install_bundle -download bundle-hazelcast-3-app-perf_test_sb-cluster-sb
 ```
 
 ## Use Case
