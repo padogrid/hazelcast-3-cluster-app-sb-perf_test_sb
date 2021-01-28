@@ -12,7 +12,7 @@ install_bundle -download bundle-hazelcast-3-app-perf_test_sb-cluster-sb
 
 To prepare for encountering cluster split-brain situations, this use case provides step-by-step instructions for creating and monitoring a Hazelcast cluster split-brain. 
 
-![Split-Brain Flow Diagram](/images/split-brain.png)
+![Split-Brain Flow Diagram](https://github.com/padogrid/bundle-hazelcast-4-app-perf_test_sb-cluster-sb/blob/master/images/split-brain.png?raw=true)
 
 ## Bundle Contents
 
@@ -42,10 +42,46 @@ Follow the instructions in the subsequent sections.
 
 ### Creating Pod
 
-Create a pod named `pod_sb` with five (5) data nodes. The pod name must be `pod_sb` since the bundle's cluster, `sb`, has been paired with that pod name.
+Create a pod named `pod_sb` with five (5) data nodes. The pod name must be `pod_sb` since the bundle's cluster, `sb`, has been paired with that pod name. Take default values for all but the memory size which you can conserve by reducing it to 1024 MiB as shown in the ouput example below. The included `sb` cluster has been preconfigured with the member max heap size of 512 MiB.
 
 ```console
 create_pod -pod pod_sb
+```
+
+**Ouput:**
+
+```console
+Please answer the prompts that appear below. You can abort this command at any time
+by entering 'Ctrl-C'.
+
+Pod name [pod_sb]:
+Primary node name [pnode]:
+Data node name prefix [node]:
+This machine has the following IP addresses. Choose one from the list. The IP address
+must be a private IP address.
+192.168.56.1
+Host private IP address [192.168.56.1]:
+First node IP address' octect [10]:
+Primary node memory size in MiB [2048]: 1024
+Data node memory size in MiB [2048]: 1024
+Number of data nodes  [2]: 5
+Products installation directory path.
+[/Users/dpark/Padogrid/workspaces/rwe-bundles-hazelcast/bundle-hazelcast-4-app-perf_test_sb-cluster-sb/products]:
+/Users/dpark/Padogrid/products/linux
+Vagrant box image [ubuntu/trusty64]:
+
+You have entered the following.
+                       Pod name: pod_sb
+              Primary node name: pnode
+          Data node name prefix: node
+        Host private IP address: 192.168.56.1
+      Node IP addres last octet: 10
+ Primary node memory size (MiB): 1024
+    Data node memory size (MiB): 1024
+                Data node count: 5
+             Products directory: /Users/dpark/Padogrid/products/linux
+              Vagrant box image: ubuntu/trusty64
+Enter 'c' to continue, 'r' to re-enter, 'q' to quit: c
 ```
 
 ### Building Pod
@@ -70,8 +106,8 @@ Change the heap min/max sizes in the `etc/cluster.properties` file.
 
 ```properties
 # Heap min and max values in etc/cluster.properties
-heap.min=1g
-heap.max=1g
+heap.min=512m
+heap.max=512m
 ```
 
 ## Creating Split-Brain
