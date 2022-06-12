@@ -21,6 +21,8 @@ bundles
 lib
 plugins
 run
+.workspace
+.cluster
 
 # PadoGrid workspace directories
 #apps
