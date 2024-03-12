@@ -132,7 +132,7 @@ Install Avahi? This allows VMs to enable local network discovery service via
 the mDNS/DNS-SD protocol. All VM host names can be looked up with the suffix
 '.local', i.e., pnode.local, node-01.local, etc.
 Enter 'true' or 'false' [false]: true
-Vagrant box image [ubuntu/trusty64]:
+Vagrant box image [ubuntu/jammy64]:
 
 You have entered the following.
                        Pod name: hz_pod_sb
@@ -145,7 +145,7 @@ You have entered the following.
                 Data node count: 5
              Products directory: /Users/dpark/Padogrid/products/linux
                   Avahi enabled: true
-              Vagrant box image: ubuntu/trusty64
+              Vagrant box image: ubuntu/jammy64
 Enter 'c' to continue, 'r' to re-enter, 'q' to quit: c
 ```
 
