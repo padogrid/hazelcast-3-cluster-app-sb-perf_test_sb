@@ -16,10 +16,16 @@ NAME
    $EXECUTABLE - Split the cluster $CLUSTER into two (2)
 
 SYNOPSIS
-   ./$EXECUTABLE [-?]
+   ./$EXECUTABLE [interface] [-?]
 
 DESRIPTION
    Splits the cluster $CLUSTER into two (2) by applying iptables rules.
+
+OPTIONS
+   interface
+             Network interface. Run 'ifconfig' or 'ip addr' to determine the network interface
+             that your host name is mapped to. For example, on ubuntu/trusty64, it would be
+             'eth1' and on ubuntu/bionic64 and ubuntu/jammy64, it would be 'enp0s8'.  Default: enp0s8
 
 SEE ALSO
    merge_cluster, list_rules
@@ -28,15 +34,27 @@ EOF
 exit
 fi
 
+if [[ "$LAST_ARG" != *"$EXECUTABLE" ]]; then
+   INTERFACE=$LAST_ARG
+fi
+
+if [ "$INTERFACE" == "" ]; then
+   INTERFACE="enp0s8"
+fi
+
+echo ""
+echo "Interface: ${INTERFACE}"
+echo ""
+
 ssh -q -n node-01.local "\
-sudo iptables -A INPUT -i eth1 -s node-03.local -j DROP; \
-sudo iptables -A INPUT -i eth1 -s node-04.local -j DROP; \
-sudo iptables -A INPUT -i eth1 -s node-05.local -j DROP"
+sudo iptables -A INPUT -i ${INTERFACE} -s node-03.local -j DROP; \
+sudo iptables -A INPUT -i ${INTERFACE} -s node-04.local -j DROP; \
+sudo iptables -A INPUT -i ${INTERFACE} -s node-05.local -j DROP"
 
 ssh -q -n node-02.local "\
-sudo iptables -A INPUT -i eth1 -s node-03.local -j DROP; \
-sudo iptables -A INPUT -i eth1 -s node-04.local -j DROP; \
-sudo iptables -A INPUT -i eth1 -s node-05.local -j DROP"
+sudo iptables -A INPUT -i ${INTERFACE} -s node-03.local -j DROP; \
+sudo iptables -A INPUT -i ${INTERFACE} -s node-04.local -j DROP; \
+sudo iptables -A INPUT -i ${INTERFACE} -s node-05.local -j DROP"
 
 cat <<EOF
 

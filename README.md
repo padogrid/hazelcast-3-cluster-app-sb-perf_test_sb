@@ -3,7 +3,7 @@
 ---
 
 <!-- Platforms -->
-[![Host OS](https://github.com/padogrid/padogrid/wiki/images/padogrid-host-os.drawio.svg)](https://github.com/padogrid/padogrid/wiki/Platform-Host-OS)
+[![PadoGrid 1.x](https://github.com/padogrid/padogrid/wiki/images/padogrid-padogrid-1.x.drawio.svg)](https://github.com/padogrid/padogrid/wiki/Platform-PadoGrid-1.x) [![Host OS](https://github.com/padogrid/padogrid/wiki/images/padogrid-host-os.drawio.svg)](https://github.com/padogrid/padogrid/wiki/Platform-Host-OS)
 
 # Hazelcast Split-Brain
 
@@ -29,7 +29,7 @@ To prepare for encountering cluster split-brain situations, this use case provid
 - [Hazelcast OSS](https://hazelcast.com/open-source-projects/downloads/archives/) (3)
 - [Linux JDK](https://www.oracle.com/java/technologies/javase-downloads.html) (3)
 
-1. This bundle uses PadoGrid pods which depend on Vagrant and VirtualBox. If you have not installed them, then please download and install them now by following the links. For details on PadoGrid pods, see [Understanding PadoGrid Pods](https://github.com/padogrid/padogrid/wiki/Understanding-Padogrid-Pods).
+1. This bundle uses PadoGrid pods which depend on Vagrant and VirtualBox. If you have not installed them, then please download and install them now by following the above links. For details on PadoGrid pods, see [Understanding PadoGrid Pods](https://github.com/padogrid/padogrid/wiki/Understanding-Padogrid-Pods).
 2. Hazelcast Desktop is integrated with PadoGrid. We will install it using `install_padogrid` later.
 3. We need Hazelcast OSS and JDK for Lunx in the VirtualBox VMs. We will install them later.
 
@@ -46,7 +46,7 @@ clusters
 
 This bundle includes the following components.
 
-- Cluster **sb**. The sb cluster is configured with five (5) VM members running in the `pod_sb` pod. It includes scripts that use `iptables` to drop TCP packets to split the `sb` cluster into two (2). It is configured with split-brain quorum rules for th following maps.
+- Cluster **sb**. The sb cluster is configured with five (5) VM members running in the `hz_pod_sb` pod. It includes scripts that use `iptables` to drop TCP packets to split the `sb` cluster into two (2). It is configured with split-brain quorum rules for th following maps.
 
   - `nw/customers`
   - `nw/orders`
@@ -55,7 +55,7 @@ This bundle includes the following components.
 
 - App **desktop**. The `desktop` app is used to compare data in the split clusters and the merged cluster. It is not included in the bundle because the vanilla desktop works without any modifications. You will be installing the `desktop` app as one of the steps shown in the [Creating Split-Brain](#creating-split-brain) section.
 
-*Note that the `sb` cluster is configured to run in the `pod_sb` pod with its members running as VM hosts and not Vagrant pod hosts.*
+*Note that the `sb` cluster is configured to run in the `hz_pod_sb` pod with its members running as VM hosts and not Vagrant pod hosts.*
 
 ## Installation Steps
 
@@ -71,7 +71,7 @@ Follow the instructions in the subsequent sections.
 
 ### Install Linux products
 
-We need the following products installed before wen can setup Vagrant VMs. Download their tarball distributions by following the links.
+We need the following products installed before wen can setup Vagrant VMs. Download their tarball distributions by following the following links.
 
 - [Hazelcast OSS](https://hazelcast.com/open-source-projects/downloads/archives/)
 - [Linux JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
@@ -80,16 +80,16 @@ Assuming you have installed PadoGrid in the default directory, untar the downloa
 
 ```bash
 mkdir ~/Padogrid/products/linux
-tar -C ~/Padogrid/products/linux -xzf  ~/Downloads/jdk-8u333-linux-x64.tar.gz
-tar -C ~/Padogrid/products/linux -xzf  ~/Downloads/hazelcast-3.12.12.tar.gz
+tar -C ~/Padogrid/products/linux -xzf  ~/Downloads/hazelcast-3.12.13.tar.gz
+tar -C ~/Padogrid/products/linux -xzf  ~/Downloads/jdk-8u401-linux-x64.tar.gz
 ```
 
 ### Create Pod
 
-Create a pod named `pod_sb` with five (5) data nodes. The pod name must be `pod_sb` since the bundle's cluster, `sb`, has been paired with that pod name. Take default values for all but the memory size which you can conserve by reducing it to 1024 MiB as shown in the ouput example below. The included `sb` cluster has been preconfigured with the member max heap size of 512 MiB.
+Create a pod named `hz_pod_sb` with five (5) data nodes. The pod name must be `hz_pod_sb` since the bundle's cluster, `sb`, has been paired with that pod name. Take default values for all but the memory size which you can conserve by reducing it to 1024 MiB as shown in the ouput example below. The included `sb` cluster has been preconfigured with the member max heap size of 512 MiB.
 
 ```console
-create_pod -pod pod_sb
+create_pod -pod hz_pod_sb
 ```
 
 **Input:**
@@ -110,7 +110,7 @@ Install Avahi? true
 Please answer the prompts that appear below. You can abort this command at any time
 by entering 'Ctrl-C'.
 
-Pod name [pod_sb]:
+Pod name [hz_pod_sb]:
 Primary node name [pnode]:
 Data node name prefix [node]:
 This machine has the following IP addresses. Choose one from the list. The IP address
@@ -135,7 +135,7 @@ Enter 'true' or 'false' [false]: true
 Vagrant box image [ubuntu/trusty64]:
 
 You have entered the following.
-                       Pod name: pod_sb
+                       Pod name: hz_pod_sb
               Primary node name: pnode
           Data node name prefix: node
         Host private IP address: 192.168.56.1
@@ -155,7 +155,7 @@ Build the pod you just created.
  
 ```console
 # Build and start the pod
-build_pod -pod pod_sb
+build_pod -pod hz_pod_sb
 ```
 
 ### Configuring Cluster
@@ -182,8 +182,10 @@ heap.max=512m
 Login to `pnode.local` and start the `sb` cluster as follows:
 
 ```console
-cd_pod pod_sb
+cd_pod hz_pod_sb
 vagrant ssh
+
+# If prompts for password
 password: vagrant
 
 # Once logged in to Varant VM, pnode, execute the following:
@@ -406,7 +408,7 @@ stop_mc -cluster sb
 From your host OS, execute the following:
 
 ```console
-stop_pod -pod pod_sb
+stop_pod -pod hz_pod_sb
 ```
 
 ### Remove Pod
@@ -414,7 +416,7 @@ stop_pod -pod pod_sb
 From you host OS, execute the following:
 
 ```console
-remove_pod -pod pod_sb
+remove_pod -pod hz_pod_sb
 ```
 
 ### Close Desktop
